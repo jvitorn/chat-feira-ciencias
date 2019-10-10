@@ -16,11 +16,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
+
+<style>
+    .orientation{
+        margin-top: 100px;margin-bottom: 100px;
+    }
+</style>
 <body>
     <div class="container-fluid">
         <!-- chat nav -->
-        <div class="row">
-            <div class="col-12 fixed-top chat-nav border p-3 ">
+        <div class="row ">
+            <div class="col-12  chat-nav border p-3 bg-white">
                 <div class="row">
                     <div class="col-3 ml-2 chat-nav-image text-center">
                         <img src="robot-icon.jpg" alt="robot image" class="img-fluid mt-1 border-0 w-100">
@@ -30,6 +36,7 @@
                         <p class="text-success">Online</p>
                     </div>
                     <div class="col-4 chat-nav-options float-right mt-2 p-1 text-center">
+                        <i class="fas fa-angle-double-left rounded p-2 text-info" style="font-size: 30px;"></i>
                         <i class="fas fa-bars rounded p-2 text-info" style="font-size: 30px;"></i>
                     </div>
                 </div>
@@ -37,33 +44,106 @@
         </div>
         <!-- chat body -->
         <div class="row">
-            <div class="col-12 chat-body" style="margin-top: 150px">
-                <!-- Message Chat -->
+            <div class="col-12 chat-body p-4 " style="margin-bottom: 100px;">
+                <!-- Message Chat Bot -->
                 <div class="row">
-                    <div class="col-10 mt-2 ml-5 bg-dark p-4 rounded chat-body-menssage-bot">
+                    <div class="col-10 mt-2 ml-5 bg-dark p-4 mb-1 rounded chat-body-menssage-bot">
                         <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet explicabo hic minus, voluptatem totam labore at similique vero impedit iste soluta dignissimos aliquid repellat est sit asperiores aliquam quo numquam?</p>
+                        
+                    </div>
+                    <div class="col-12 chat-body-menssage-bot-info mt-1">
+                        <div class="row">
+                            <div class="col-10 offset-1 chat-body-menssage-bot-time mb-2">
+                                <figcaption class="figure-caption mt-2 text-left"> 11:10  | Today </figcaption>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                 <!-- Message Chat User -->
                 <div class="row">
-                    <div class="col-10 ml-3 mt-3 bg-info p-4 rounded chat-body-mensage-user">
+                    <div class="col-10 ml-2 mt-2 bg-info p-4  rounded chat-body-mensage-user">
                         <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet explicabo hic minus, voluptatem totam labore at similique vero impedit iste soluta dignissimos aliquid repellat est sit asperiores aliquam quo numquam?</p>
                     </div>
+                    <div class="col-12 chat-body-menssage-user-info mt-1">
+                        <div class="row ">
+                            <div class="col-11 chat-body-menssage-user-time mb-2">
+                                <figcaption class="figure-caption mt-2 text-right"> 11:10  | Today </figcaption>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- Message Chat Bot -->
+                <div class="row">
+                        <div class="col-10 mt-2 ml-5 bg-dark p-4 mb-1 rounded chat-body-menssage-bot">
+                            <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet explicabo hic minus, voluptatem totam labore at similique vero impedit iste soluta dignissimos aliquid repellat est sit asperiores aliquam quo numquam?</p>
+                            
+                        </div>
+                        <div class="col-12 chat-body-menssage-bot-info mt-1">
+                            <div class="row">
+                                <div class="col-10 offset-1 chat-body-menssage-bot-time mb-2">
+                                    <figcaption class="figure-caption mt-2 text-left"> 11:10  | Today </figcaption>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Message Chat User -->
+                    <div class="row">
+                        <div class="col-10 ml-2 mt-2 bg-info p-4  rounded chat-body-mensage-user">
+                            <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet explicabo hic minus, voluptatem totam labore at similique vero impedit iste soluta dignissimos aliquid repellat est sit asperiores aliquam quo numquam?</p>
+                        </div>
+                        <div class="col-12 chat-body-menssage-user-info mt-1">
+                            <div class="row ">
+                                <div class="col-11 chat-body-menssage-user-time mb-2">
+                                    <figcaption class="figure-caption mt-2 text-right"> 11:10  | Today </figcaption>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
+        
         <!-- chat footer -->
         <div class="row">
-            <div class="col-12 fixed-bottom chat-footer border p-4">
+            <div class="col-12 fixed-bottom chat-footer border bg-white p-4">
                 <div class="row">
                     <div class="col-9 form-group">
-                        <input type="text" name="message" id="message-user" class="form-control">
+                        <input type="text" name="message" id="message-user" class="form-control text-center" placeholder="Digite Sua Mensagem">
                     </div>
                     <div class="col-3">
-                        <button class="btn btn-success btn-block"><i class="fas fa-paper-plane"></i></button>
+                        <button class="btn btn-info btn-block btn-enviar"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
+<script>
+        $(document).ready(function(){
+            function NavTop(){
+                if ( $('.chat-nav').length ){ 
+                let nav_offset_top = $('.chat-nav').height()+20;
+                        $(window).scroll(function() {
+                            var scroll = $(window).scrollTop();   
+                            if (scroll >= nav_offset_top ) {
+                                $(".chat-nav").addClass("fixed-top");
+                                $(".chat-body").addClass("orientation");
+                                
+                            } else {
+                                $(".chat-nav").removeClass("fixed-top");
+                                $(".chat-body").removeClass("orientation");
+                                
+                            }
+                        });
+                };
+            }
+            NavTop();
+            $('btn-enviar').click(function(){
+                let mensagem = $("input#message-user").val();
+                alert(mensagem);
+                console.log('entrou');
+            });
+           
+               
+        });
+        </script>
 </html>
