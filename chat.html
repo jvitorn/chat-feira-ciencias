@@ -69,40 +69,74 @@
     </div>
 </body>
 <script>
-   
+    var botPerguntou = false;
+    var id_pergunta_bot = 0;
         $(document).ready(function(){
             function NavTop(){
                 if ( $('.chat-nav').length ){ 
                 let nav_offset_top = $('.chat-nav').height()+20;
-                        $(window).scroll(function() {
-                            var scroll = $(window).scrollTop();   
-                            if (scroll >= nav_offset_top ) {
-                                $(".chat-nav").addClass("fixed-top");
-                                $(".chat-body").addClass("orientation");
-                                
-                            } else {
-                                $(".chat-nav").removeClass("fixed-top");
-                                $(".chat-body").removeClass("orientation");
-                                
-                            }
-                        });
+                    $(window).scroll(function() {
+                        var scroll = $(window).scrollTop();   
+                        if (scroll >= nav_offset_top ) {
+                            $(".chat-nav").addClass("fixed-top");
+                            $(".chat-body").addClass("orientation");
+                            
+                        } else {
+                            $(".chat-nav").removeClass("fixed-top");
+                            $(".chat-body").removeClass("orientation");
+                            
+                        }
+                    });
                 };
             }
             NavTop();
-            $("#mostrar").load("teste.html");
+            // $("#mostrar").load("teste.html");
         });
         $(document).on('click','.btn-enviar',function(){
+            
             let mensagem = $('#message-user').val();
-            let parametros = {"mensagem" : mensagem};
+
+            var msguser = $('#div_msg_user').html();
+            msguser = msguser.replace('$mensagem',mensagem);
+
+
+            var dt = new Date();
+            var hora = dt.getHours();
+            var min = dt.getMinutes();
+
+            msguser = msguser.replace('$dthr',hora+':'+min);
+
+            $('#mostrar').append(msguser);
+
+            console.log("mensagem: "+ mensagem +" id_pergunta: "+ id_pergunta_bot);
+           
             $.ajax({
                 type:"post",
-                url:'enviar.php',
-                data:parametros,
+                url:'bot.php',
+                data:{"mensagem" : mensagem, "id_pergunta": id_pergunta_bot},
                 // success
                 success:function(data){
-                    alert('enviado');
                     //apagando valores
                     $('#message-user').val("");
+                    id_pergunta_bot = 0;
+  
+                     setTimeout(function(){
+                        
+                        botPerguntou = false;
+                        if(data != ""){
+                            var msgbot = $('#div_msg_bot').html();
+                            msgbot = msgbot.replace('$mensagem',data);
+
+                            var dt = new Date();
+                            var hora = dt.getHours();
+                            var min = dt.getMinutes();
+
+                            msgbot = msgbot.replace('$dthr',hora+':'+min);
+                            $('#mostrar').append(msgbot);
+                            
+                        }
+
+                    },1000);   
                 },
                 // error
                 error:function(data){
@@ -127,5 +161,47 @@
                 focusConfirm: false
                 })
         });
+
+
+        $(document).on('keypress',function(e) {
+            if(e.which == 13) {
+                $('.btn-enviar').trigger('click');
+            }
+        });
         </script>
 </html>
+
+<script type="text/javascript" src="verificaPerguntas.js"></script>
+
+<div style="display:none">
+    <!-- Message Chat User -->
+    <div class="row" id="div_msg_user">
+        <div class="col-10 ml-2 mt-2 bg-info p-4  rounded chat-body-mensage-user">
+            <p class="text-white">$mensagem</p>
+        </div>
+        <div class="col-12 chat-body-menssage-user-info mt-1">
+            <div class="row ">
+                <div class="col-11 chat-body-menssage-user-time mb-2">
+                    <figcaption class="figure-caption mt-2 text-right"> $dthr | Hoje </figcaption>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Chat Bot -->
+    <div class="row" id="div_msg_bot">
+        <div class="col-10 mt-2 ml-5 bg-dark p-4 mb-1 rounded chat-body-menssage-bot">
+            <p class="text-white">$mensagem</p>
+            
+        </div>
+        <div class="col-12 chat-body-menssage-bot-info mt-1">
+            <div class="row">
+                <div class="col-10 offset-1 chat-body-menssage-bot-time mb-2">
+                    <figcaption class="figure-caption mt-2 text-left"> $dthr  | Today </figcaption>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
