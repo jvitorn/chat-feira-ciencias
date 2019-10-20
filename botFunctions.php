@@ -74,16 +74,32 @@
 
 	function botCapturaResposta($fraseUsuario, $perg){
 		//seleciona a resposta
+		$temFrase = false;
+		$temConexao = false;
+
 		$sql = "SELECT * FROM frase WHERE frase = '". $fraseUsuario ."'";
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
-		//se existir essa resposta...
+		//se existir essa frase...
 		if($res->num_rows > 0){
+			$temFrase = true;
 			
-			//aumenta a frequencia dessa resposta em relação a pergunta
 			$resposta_f = mysqli_fetch_assoc($res);
+			
+			//verifica se essa frase tem conexao com a pergunta
+			$sql = "SELECT * FROM 
+						resposta 
+					WHERE 
+						id_resposta = ".$resposta_f['id_frase']." 
+					AND 
+						id_pergunta = ".$perg;
 
-			$sql = "UPDATE 
+			$res = mysqli_query($GLOBALS['conn'], $sql);
+			//se tiver conexao, aumenta a frequencia
+			if($res->num_rows > 0){
+				$temConexao = true;
+
+				$sql = "UPDATE 
 						resposta 
 					SET 
 						frequencia = frequencia + 1 
@@ -92,10 +108,16 @@
 					AND 
 						id_pergunta = ".$perg;
 			
-			mysqli_query($GLOBALS['conn'], $sql);
+				mysqli_query($GLOBALS['conn'], $sql);
+			//se nao tiver conexao, cria.
+			}else{
 
+			}
+			
 		//se a resposta que o usuario deu para o bot nao existir no DB
-		}else{
+		}
+
+		if(!$temFrase){
 			//armazena ela e da frequencia 1 para ela, afinal essa foi a primeira vez
 			//que alguem respondeu a pergunta do bot com essa resposta.
 
@@ -110,7 +132,10 @@
 			$sql = "SELECT * FROM frase WHERE frase = '".$fraseUsuario."' ";
 			$res = mysqli_query($GLOBALS['conn'], $sql);
 			$resposta_f = mysqli_fetch_assoc($res);
+		}
+			
 
+		if(!$temConexao){
 			//vincula a frase com a resposta
 			$sql = "INSERT INTO 
 						resposta (id_resp_perg,id_resposta, id_pergunta, frequencia)
@@ -118,6 +143,7 @@
 
 			mysqli_query($GLOBALS['conn'], $sql);
 		}
+
 	}
 
 	function botPergunta(){
