@@ -3,7 +3,7 @@
 	function botResponde($fraseUsuario){
 		$temResposta = false;
 		//query para verificar se essa frase existe no DB
-		$sql = "SELECT * FROM frase WHERE frase = '". $fraseUsuario ."'";
+		$sql = 'SELECT * FROM frase WHERE UCASE(frase) = "'. strtoupper($fraseUsuario).'"';
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
 		//se existir vai pegar o ID dela
@@ -60,12 +60,12 @@
 
 			mysqli_query($GLOBALS['conn'], $sql);
 			
-			$sql = "SELECT * FROM frase WHERE frase ='".$fraseUsuario."'";
+			$sql = "SELECT * FROM frase WHERE UCASE(frase) ='".strtoupper($fraseUsuario)."'";
 			$res = mysqli_query($GLOBALS['conn'], $sql);
 			$pergunta_f = mysqli_fetch_assoc($res);
 			
 			$ret['status'] = 1;
-			$ret['msg'] = 	'Eu nao sei como responder isso, o que eu deveria dizer?';
+			$ret['msg'] = 'Eu nao sei como responder isso, o que eu deveria dizer?';
 			$ret['id_pergunta'] = $pergunta_f['id_frase'];
 		}
 
@@ -77,7 +77,7 @@
 		$temFrase = false;
 		$temConexao = false;
 
-		$sql = "SELECT * FROM frase WHERE frase = '". $fraseUsuario ."'";
+		$sql = "SELECT * FROM frase WHERE UCASE(frase) = '". strtoupper($fraseUsuario)."'";
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
 		//se existir essa frase...
@@ -185,4 +185,3 @@
 		}
 		return $mensagem;
 	}
-

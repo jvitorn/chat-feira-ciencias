@@ -96,59 +96,64 @@
             
             let mensagem = $('#message-user').val();
 
-            var msguser = $('#div_msg_user').html();
-            msguser = msguser.replace('$mensagem',mensagem);
+            $verificaEspaco = mensagem.replace(/( )/ig,"");
+            if($verificaEspaco != ""){
+                mensagem = mensagem.replace(/\s{2,}/g, ' ');
+                var msguser = $('#div_msg_user').html();
+                msguser = msguser.replace('$mensagem',mensagem);
 
 
-            var dt = new Date();
-            var hora = dt.getHours();
-            var min = dt.getMinutes();
+                var dt = new Date();
+                var hora = dt.getHours();
+                var min = dt.getMinutes();
 
-            msguser = msguser.replace('$dthr',hora+':'+min);
+                msguser = msguser.replace('$dthr',hora+':'+min);
 
-            $('#mostrar').append(msguser);
-           
-            $.ajax({
-                type:"post",
-                url:'bot.php',
-                dataType:'json',
-                data:{"mensagem" : mensagem, "id_pergunta": id_pergunta_bot},
-                // success
-                success:function(json){
-                    console.log(json);
-                    //apagando valores
-                    $('#message-user').val("");
+                $('#mostrar').append(msguser);
+               
+                $.ajax({
+                    type:"post",
+                    url:'bot.php',
+                    dataType:'json',
+                    data:{"mensagem" : mensagem, "id_pergunta": id_pergunta_bot},
+                    // success
+                    success:function(json){
+                        console.log(json);
+                        //apagando valores
+                        $('#message-user').val("");
 
-                    id_pergunta_bot = json.id_pergunta;
-  
-                     setTimeout(function(){
-                        
-                        botPerguntou = false;
-                        if(json.status == 1){
-                            var msgbot = $('#div_msg_bot').html();
-                            msgbot = msgbot.replace('$mensagem',json.msg);
+                        id_pergunta_bot = json.id_pergunta;
+      
+                         setTimeout(function(){
+                            
+                            botPerguntou = false;
+                            if(json.status == 1){
+                                var msgbot = $('#div_msg_bot').html();
+                                msgbot = msgbot.replace('$mensagem',json.msg);
 
-                            var dt = new Date();
-                            var hora = dt.getHours();
-                            var min = dt.getMinutes();
+                                var dt = new Date();
+                                var hora = dt.getHours();
+                                var min = dt.getMinutes();
 
-                            msgbot = msgbot.replace('$dthr',hora+':'+min);
-                            $('#mostrar').append(msgbot);
-                        }
+                                msgbot = msgbot.replace('$dthr',hora+':'+min);
+                                $('#mostrar').append(msgbot);
+                            }
 
-                    },1000);   
-                },
-                // error
-                error:function(data){
-                    console.log(data);
-                    Swal.fire({ 
-                        type: 'error',
-                        title: 'Oops...',
-                        text: 'Parece que aconteceu algo de errado!'
-                    })
-                }
-            })
+                        },1000);   
+                    },
+                    // error
+                    error:function(data){
+                        console.log(data);
+                        Swal.fire({ 
+                            type: 'error',
+                            title: 'Oops...',
+                            text: 'Parece que aconteceu algo de errado!'
+                        })
+                    }
+                });
+            }   
         });
+
         $(document).on('click','.fa-bars',function(){
             Swal.fire({
                 title: '<strong>T.A.C.S Informações</strong>',
