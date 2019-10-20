@@ -9,7 +9,7 @@ body {
     font-size: 38px;
     font-weight: 600;
     text-align: center;
-    color: #F70C5E;
+    color: #114356;
 }
 
 .carousel-item-div {
@@ -29,13 +29,13 @@ body {
     margin-top: -8%;
     text-align: center;
     font-size: 22px;
-    color: #F70C5E;
+    color: #218681;
     font-weight: 600;
 }
 
-#botao {
+.botao {
     width: 100%;
     height: 80px;
     font-size: 26px;
-    background-color: #D10042;
+    background-color: #114356;
 }
