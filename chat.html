@@ -107,25 +107,26 @@
             msguser = msguser.replace('$dthr',hora+':'+min);
 
             $('#mostrar').append(msguser);
-
-            console.log("mensagem: "+ mensagem +" id_pergunta: "+ id_pergunta_bot);
            
             $.ajax({
                 type:"post",
                 url:'bot.php',
+                dataType:'json',
                 data:{"mensagem" : mensagem, "id_pergunta": id_pergunta_bot},
                 // success
-                success:function(data){
+                success:function(json){
+                    console.log(json);
                     //apagando valores
                     $('#message-user').val("");
-                    id_pergunta_bot = 0;
+
+                    id_pergunta_bot = json.id_pergunta;
   
                      setTimeout(function(){
                         
                         botPerguntou = false;
-                        if(data != ""){
+                        if(json.status == 1){
                             var msgbot = $('#div_msg_bot').html();
-                            msgbot = msgbot.replace('$mensagem',data);
+                            msgbot = msgbot.replace('$mensagem',json.msg);
 
                             var dt = new Date();
                             var hora = dt.getHours();
@@ -133,13 +134,13 @@
 
                             msgbot = msgbot.replace('$dthr',hora+':'+min);
                             $('#mostrar').append(msgbot);
-                            
                         }
 
                     },1000);   
                 },
                 // error
                 error:function(data){
+                    console.log(data);
                     Swal.fire({ 
                         type: 'error',
                         title: 'Oops...',
