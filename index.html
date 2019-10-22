@@ -1,213 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <title>Chat Bot</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/3732f07a5a.js"></script>
-    <!-- Bootstrap JS And Jquery -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <!-- sweet alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
-    <!-- Optional: include a polyfill for ES6 Promises for IE11 and Android browser -->
-    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
-</head>
-
-<style>
-    .orientation{
-        margin-top: 100px;margin-bottom: 100px;
-    }
-</style>
-<body>
-    <div class="container-fluid">
-        <!-- chat nav -->
-        <div class="row ">
-            <div class="col-12  chat-nav border p-3 bg-white">
-                <div class="row">
-                    <div class="col-3 ml-2 chat-nav-image text-center">
-                        <img src="robot-icon.jpg" alt="robot image" class="img-fluid mt-1 border-0 w-100">
-                    </div>
-                    <div class="col-4 chat-nav-name p-2">
-                        <strong class="h6">ChatName</strong>
-                        <p class="text-success">Online</p>
-                    </div>
-                    <div class="col-4 chat-nav-options float-right mt-2 p-1 text-center">
-                        <i class="fas fa-angle-double-left rounded p-2 text-info" style="font-size: 30px;"></i>
-                        <i class="fas fa-bars rounded p-2 text-info" style="font-size: 30px;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- chat body -->
-        <div class="row">
-            <div class="col-12 chat-body p-4 mostrar" id="mostrar" style="margin-bottom: 100px;">
-
-            </div>
-        </div>
-        
-        <!-- chat footer -->
-        <div class="row">
-            <div class="col-12 fixed-bottom chat-footer border bg-white p-4">
-                <div class="row">
-                    <div class="col-9 form-group">
-                        <input type="text" name="message" id="message-user" class="form-control text-center" placeholder="Digite Sua Mensagem">
-                    </div>
-                    <div class="col-3">
-                        <button class="btn btn-info btn-block btn-enviar"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-<script>
-    var botPerguntou = false;
-    var id_pergunta_bot = 0;
-        $(document).ready(function(){
-            function NavTop(){
-                if ( $('.chat-nav').length ){ 
-                let nav_offset_top = $('.chat-nav').height()+20;
-                    $(window).scroll(function() {
-                        var scroll = $(window).scrollTop();   
-                        if (scroll >= nav_offset_top ) {
-                            $(".chat-nav").addClass("fixed-top");
-                            $(".chat-body").addClass("orientation");
-                            
-                        } else {
-                            $(".chat-nav").removeClass("fixed-top");
-                            $(".chat-body").removeClass("orientation");
-                            
-                        }
-                    });
-                };
-            }
-            NavTop();
-            // $("#mostrar").load("teste.html");
-        });
-        $(document).on('click','.btn-enviar',function(){
-            
-            let mensagem = $('#message-user').val();
-
-            $verificaEspaco = mensagem.replace(/( )/ig,"");
-            if($verificaEspaco != ""){
-                mensagem = mensagem.replace(/\s{2,}/g, ' ');
-                var msguser = $('#div_msg_user').html();
-                msguser = msguser.replace('$mensagem',mensagem);
-
-
-                var dt = new Date();
-                var hora = dt.getHours();
-                var min = dt.getMinutes();
-
-                msguser = msguser.replace('$dthr',hora+':'+min);
-
-                $('#mostrar').append(msguser);
-               
-                $.ajax({
-                    type:"post",
-                    url:'bot.php',
-                    dataType:'json',
-                    data:{"mensagem" : mensagem, "id_pergunta": id_pergunta_bot},
-                    // success
-                    success:function(json){
-                        console.log(json);
-                        //apagando valores
-                        $('#message-user').val("");
-
-                        id_pergunta_bot = json.id_pergunta;
-      
-                         setTimeout(function(){
-                            
-                            botPerguntou = false;
-                            if(json.status == 1){
-                                var msgbot = $('#div_msg_bot').html();
-                                msgbot = msgbot.replace('$mensagem',json.msg);
-
-                                var dt = new Date();
-                                var hora = dt.getHours();
-                                var min = dt.getMinutes();
-
-                                msgbot = msgbot.replace('$dthr',hora+':'+min);
-                                $('#mostrar').append(msgbot);
-                            }
-
-                        },1000);   
-                    },
-                    // error
-                    error:function(data){
-                        console.log(data);
-                        Swal.fire({ 
-                            type: 'error',
-                            title: 'Oops...',
-                            text: 'Parece que aconteceu algo de errado!'
-                        })
-                    }
-                });
-            }   
-        });
-
-        $(document).on('click','.fa-bars',function(){
-            Swal.fire({
-                title: '<strong>T.A.C.S Informações</strong>',
-                type: 'info',
-                html:
-                    'Tecnologia Artificial de Comunicação e Sistemas, ' +
-                    'Chatbot criado com o Proposito de mostrar  ' +
-                    'a <b>influência</b> que uma conversa de um humano e uma <b><u>I.A</u></b> possa ter em sociedade',
-                showCloseButton: true,
-                showCancelButton: true,
-                focusConfirm: false
-                })
-        });
-
-
-        $(document).on('keypress',function(e) {
-            if(e.which == 13) {
-                $('.btn-enviar').trigger('click');
-            }
-        });
-        </script>
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/index.css">
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-12">
+					<div id="carousel" class="carousel slide" data-ride="carousel">
+  						<div class="carousel-inner">
+    						<div class="carousel-item active">
+      							<div class="carousel-item-div">
+      								<div class="row">
+      									<div class="col-12" id="first-page-item">
+      										<span>Bem-vindo ao T.A.C.S!</span>
+      									</div>
+      								</div>
+      								<div class="row">
+      									<div class="col-12">
+      										<img class="image-responsive" src="css/robot.gif" id="first-item-image">
+      									</div>
+      								</div>
+      								<div class="row">
+      									<div class="col-12">
+      										<p id="first-page-text">
+      											Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+      										</p>
+      									</div>
+      								</div>
+      								<div class="row">
+      									<div class="col-10 offset-1">
+      										<button class="btn btn-success botao" href="#carousel" role="button" data-slide="next">Próxima página</button>
+      									</div>
+      								</div>
+      							</div>
+    						</div>
+    						<div class="carousel-item">
+      							<div class="carousel-item-div">
+									<div class="carousel-item-div">
+										<div class="row">
+											<div class="col-12" id="first-page-item">
+												<span>Você conhece o que é um bot?</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-12">
+												<img class="image-responsive" src="css/robot.gif" id="first-item-image">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-12">
+												<p id="first-page-text">
+													Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum.
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-10 offset-1">
+												<button class="btn btn-success botao" href="#carousel" role="button" data-slide="next">Próxima página</button>
+											</div>
+										</div>
+									</div>
+      							</div>
+    						</div>
+    						<div class="carousel-item">
+      							<div class="carousel-item-div">
+									<div class="carousel-item-div">
+										<div class="row">
+											<div class="col-12" id="first-page-item">
+												<span>Bem-vindo ao T.A.C.S!</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-12">
+												<img class="image-responsive" src="css/robot.gif" id="first-item-image">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-12">
+												<p id="first-page-text">
+													Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.Ir para o chat
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-10 offset-1">
+												<button id="final-btn" class="btn btn-success botao" href="" role="button" data-slide="next">Ir para o chat</button>
+											</div>
+										</div>
+									</div>
+      							</div>
+    						</div>
+  						</div>
+					</div>					
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script>
+			$(document).on('click', '#final-btn', function(){
+				$(location).attr('href', 'chat.html');
+			});
+		</script>
+	</body>
 </html>
-
-<script type="text/javascript" src="verificaPerguntas.js"></script>
-
-<div style="display:none">
-    <!-- Message Chat User -->
-    <div class="row" id="div_msg_user">
-        <div class="col-10 ml-2 mt-2 bg-info p-4  rounded chat-body-mensage-user">
-            <p class="text-white">$mensagem</p>
-        </div>
-        <div class="col-12 chat-body-menssage-user-info mt-1">
-            <div class="row ">
-                <div class="col-11 chat-body-menssage-user-time mb-2">
-                    <figcaption class="figure-caption mt-2 text-right"> $dthr | Hoje </figcaption>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Message Chat Bot -->
-    <div class="row" id="div_msg_bot">
-        <div class="col-10 mt-2 ml-5 bg-dark p-4 mb-1 rounded chat-body-menssage-bot">
-            <p class="text-white">$mensagem</p>
-            
-        </div>
-        <div class="col-12 chat-body-menssage-bot-info mt-1">
-            <div class="row">
-                <div class="col-10 offset-1 chat-body-menssage-bot-time mb-2">
-                    <figcaption class="figure-caption mt-2 text-left"> $dthr  | Today </figcaption>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
