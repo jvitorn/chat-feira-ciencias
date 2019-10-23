@@ -2,8 +2,15 @@
 	require_once 'conn.php';
 	function botResponde($fraseUsuario){
 		$temResposta = false;
+
+		if(strlen($fraseUsuario) > 3 AND (preg_match("/\\s/", $fraseUsuario))){
+			$qFrase = ' LIKE "%'. strtoupper($fraseUsuario).'%"';
+		}else{
+			$qFrase = ' = "'. strtoupper($fraseUsuario).'"';
+		}
+
 		//query para verificar se essa frase existe no DB
-		$sql = 'SELECT * FROM frase WHERE UCASE(frase) LIKE "%'. strtoupper($fraseUsuario).'%"';
+		$sql = 'SELECT * FROM frase WHERE UCASE(frase) '.$qFrase;
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
 		//se existir vai pegar o ID dela
