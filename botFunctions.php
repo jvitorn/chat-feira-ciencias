@@ -14,7 +14,7 @@
 		if($res->num_rows > 0){
 			$encontrouFrase = true;
 		}else{
-			
+
 			$qFrase = ' LIKE "%'. strtoupper($fraseUsuario).'%"';	
 			$sql = 'SELECT * FROM frase WHERE UCASE(frase) '.$qFrase;
 			$res = mysqli_query($GLOBALS['conn'], $sql);
@@ -32,13 +32,13 @@
 
 			//após pegar o id da pergunta, vai verificar se existe uma resposta para ela
 			$sql = "SELECT * FROM resposta WHERE id_pergunta = '".$id_pergunta."' ";
-			$res = mysqli_query($GLOBALS['conn'], $sql);
+			$res2 = mysqli_query($GLOBALS['conn'], $sql);
 
 			//se houver resposta registrada...
-			if($res->num_rows > 0){
+			if($res2->num_rows > 0){
 				$temResposta = true;
 				//vai passar todas as respostas para um array
-				while($fetch = mysqli_fetch_assoc($res)){
+				while($fetch = mysqli_fetch_assoc($res2)){
 					$resposta_f[] = $fetch;
 				}
 
