@@ -71,6 +71,7 @@
 <script>
     var botPerguntou = false;
     var id_pergunta_bot = 0;
+    var finalizaCiclo = 0;
         $(document).ready(function(){
             function NavTop(){
                 if ( $('.chat-nav').length ){ 
@@ -115,7 +116,9 @@
                     type:"post",
                     url:'bot.php',
                     dataType:'json',
-                    data:{"mensagem" : mensagem, "id_pergunta": id_pergunta_bot},
+                    data:{"mensagem" : mensagem,
+                          "id_pergunta": id_pergunta_bot,
+                          "finalizaCiclo": finalizaCiclo },
                     // success
                     success:function(json){
                         console.log(json);
@@ -123,6 +126,7 @@
                         $('#message-user').val("");
 
                         id_pergunta_bot = json.id_pergunta;
+                        finalizaCiclo = json.finalizaCiclo;
       
                          setTimeout(function(){
                             

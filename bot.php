@@ -9,7 +9,7 @@
 		 * entao o bot vai procurar uma resposta para o que o usuario falou.
 		 */
 		if(isset($_POST['mensagem']) && $id_perg == 0){
-			echo json_encode( botResponde($_POST['mensagem']) );
+			echo json_encode( botResponde($_POST['mensagem'], $_POST['finalizaCiclo'] ));
 		}
 
 		//se tiver mensagem e tiver id de pergunta, quer dizer que é uma resposta
@@ -17,7 +17,7 @@
 		if(isset($_POST['mensagem']) && $id_perg > 0){
 
 			botCapturaResposta($_POST['mensagem'], $id_perg);
-			echo json_encode( botResponde($_POST['mensagem']) );
+			echo json_encode( botResponde($_POST['mensagem'], $_POST['finalizaCiclo']));
 		}
 
 		//se a chamada é para o bot fazer uma pergunta...

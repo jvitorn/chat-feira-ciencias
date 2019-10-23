@@ -1,11 +1,10 @@
 <?php
 	require_once 'conn.php';
-	function botResponde($fraseUsuario){
+	function botResponde($fraseUsuario, $finalizaCiclo){
 		$temResposta = false;
 		$encontrouFrase = false;
 		//query para verificar se essa frase existe no DB
 
-		
 		$qFrase = ' = "'. strtoupper($fraseUsuario).'"';
 
 		$sql = 'SELECT * FROM frase WHERE UCASE(frase) '.$qFrase;
@@ -66,7 +65,8 @@
 
 				$ret['status'] = 1;
 				$ret['msg'] = filtroPalavras($resposta_f['frase']);
-				$ret['id_pergunta'] = $resposta_f['id_frase'];	
+				$ret['id_pergunta'] = $resposta_f['id_frase'];
+				$ret['finalizaCiclo'] = 0;
 			}
 		}
 		//se o que o usuário digitou nao estiver registrado...
@@ -78,17 +78,22 @@
 						(null,"'.$fraseUsuario.'")';
 
 			mysqli_query($GLOBALS['conn'], $sql);
-
 			
 			$sql = "SELECT * FROM frase WHERE UCASE(frase) = '".strtoupper($fraseUsuario)."' ";
-
 
 			$res = mysqli_query($GLOBALS['conn'], $sql);
 			$pergunta_f = mysqli_fetch_assoc($res);
 			
 			$ret['status'] = 1;
-			$ret['msg'] = 'Eu nao sei como responder isso, o que eu deveria dizer?';
-			$ret['id_pergunta'] = $pergunta_f['id_frase'];
+			if($finalizaCiclo){
+				$ret['msg'] = 'Entendi, irei guardar na memória!';
+				$ret['id_pergunta'] = 0;
+				$ret['finalizaCiclo'] = 0;
+			}else{
+				$ret['msg'] = 'Eu nao sei como responder isso, o que eu deveria dizer?';
+				$ret['id_pergunta'] = $pergunta_f['id_frase'];
+				$ret['finalizaCiclo'] = 1;
+			}
 		}
 
 		return $ret;
@@ -185,6 +190,7 @@
 			$ret['status'] = 1;
 			$ret['msg'] = 	$pergunta_f[$resp_escolhida]['frase'];
 			$ret['id_pergunta'] = $pergunta_f[$resp_escolhida]['id_frase'];
+			$ret['finalizaCiclo'] = 0;
 			//retorna o array;
 			return $ret;
 		}
