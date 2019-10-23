@@ -3,7 +3,7 @@
 	function botResponde($fraseUsuario){
 		$temResposta = false;
 		//query para verificar se essa frase existe no DB
-		$sql = 'SELECT * FROM frase WHERE UCASE(frase) = "'. strtoupper($fraseUsuario).'"';
+		$sql = 'SELECT * FROM frase WHERE UCASE(frase) LIKE "%'. strtoupper($fraseUsuario).'%"';
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
 		//se existir vai pegar o ID dela
@@ -60,7 +60,7 @@
 
 			mysqli_query($GLOBALS['conn'], $sql);
 			
-			$sql = "SELECT * FROM frase WHERE UCASE(frase) ='".strtoupper($fraseUsuario)."'";
+			$sql = "SELECT * FROM frase WHERE UCASE(frase) LIKE '%".strtoupper($fraseUsuario)."%'";
 			$res = mysqli_query($GLOBALS['conn'], $sql);
 			$pergunta_f = mysqli_fetch_assoc($res);
 			
@@ -77,7 +77,7 @@
 		$temFrase = false;
 		$temConexao = false;
 
-		$sql = "SELECT * FROM frase WHERE UCASE(frase) = '". strtoupper($fraseUsuario)."'";
+		$sql = "SELECT * FROM frase WHERE UCASE(frase) LIKE '%". strtoupper($fraseUsuario)."%'";
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
 		//se existir essa frase...
