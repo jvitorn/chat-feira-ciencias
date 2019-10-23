@@ -16,13 +16,6 @@
 		//se existir vai pegar o ID dela
 		if($res->num_rows > 0){
 			$pergunta_f = mysqli_fetch_assoc($res);
-
-			$ret['status'] = 1;
-			$ret['msg'] = $sql;
-			$ret['id_pergunta'] = 0;	
-			echo json_encode($ret);
-			exit;
-
 			$id_pergunta = $pergunta_f['id_frase'];
 
 			//após pegar o id da pergunta, vai verificar se existe uma resposta para ela
