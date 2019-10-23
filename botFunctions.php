@@ -78,8 +78,11 @@
 						(null,"'.$fraseUsuario.'")';
 
 			mysqli_query($GLOBALS['conn'], $sql);
+
 			
-			$sql = "SELECT * FROM frase WHERE UCASE(frase) LIKE '%".strtoupper($fraseUsuario)."%'";
+			$sql = "SELECT * FROM frase WHERE UCASE(frase) = '".strtoupper($fraseUsuario)."' ";
+
+
 			$res = mysqli_query($GLOBALS['conn'], $sql);
 			$pergunta_f = mysqli_fetch_assoc($res);
 			
