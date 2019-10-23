@@ -2,19 +2,31 @@
 	require_once 'conn.php';
 	function botResponde($fraseUsuario){
 		$temResposta = false;
-
-		if(strlen($fraseUsuario) > 3 && (preg_match("/\\s/", $fraseUsuario))){
-			$qFrase = ' LIKE "%'. strtoupper($fraseUsuario).'%"';
-		}else{
-			$qFrase = ' = "'. strtoupper($fraseUsuario).'"';
-		}
-
+		$encontrouFrase = false;
 		//query para verificar se essa frase existe no DB
+
+		
+		$qFrase = ' = "'. strtoupper($fraseUsuario).'"';
+
 		$sql = 'SELECT * FROM frase WHERE UCASE(frase) '.$qFrase;
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
-		//se existir vai pegar o ID dela
 		if($res->num_rows > 0){
+			$encontrouFrase = true;
+		}else{
+			
+			$qFrase = ' LIKE "%'. strtoupper($fraseUsuario).'%"';	
+			$sql = 'SELECT * FROM frase WHERE UCASE(frase) '.$qFrase;
+			$res = mysqli_query($GLOBALS['conn'], $sql);
+			
+			if($res->num_rows > 0){
+				$encontrouFrase = true;
+			}
+		}
+		
+		//se existir vai pegar o ID dela
+		if($encontrouFrase){
+			
 			$pergunta_f = mysqli_fetch_assoc($res);
 			$id_pergunta = $pergunta_f['id_frase'];
 
@@ -84,7 +96,7 @@
 		$temFrase = false;
 		$temConexao = false;
 
-		$sql = "SELECT * FROM frase WHERE UCASE(frase) LIKE '%". strtoupper($fraseUsuario)."%'";
+		$sql = "SELECT * FROM frase WHERE UCASE(frase) = '". strtoupper($fraseUsuario)."' ";
 		$res = mysqli_query($GLOBALS['conn'], $sql);
 		
 		//se existir essa frase...
@@ -150,7 +162,6 @@
 
 			mysqli_query($GLOBALS['conn'], $sql);
 		}
-
 	}
 
 	function botPergunta(){
